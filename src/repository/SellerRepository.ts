@@ -5,10 +5,10 @@ import { Logger } from "../util/Logger";
 export class SellerRepository {
     constructor() {
         globalThis.DB_INSTANCE = new MongoClient(process.env.DB_URL);
-        this.load();
+        globalThis.SELLER_REPOSITORY = this;
     }
 
-    async load(): Promise<void> {
+    public async load(): Promise<boolean> {
         try {
             Logger.log('Connecting to database...');
             await globalThis.DB_INSTANCE.connect();
@@ -17,10 +17,9 @@ export class SellerRepository {
             const records = await globalThis.DB_INSTANCE
                 .db("nekohi")
                 .collection("seller")
-                .find();
+                .find().toArray();
 
             records.map((record) => {
-                console.log(record);
                 const seller: SellerProfile = {
                     name: record.name,
                     url: record.url,
@@ -30,15 +29,15 @@ export class SellerRepository {
                 globalThis.SELLERS.push(seller);
             });
 
+            Logger.log('Sellers loaded!');
+
             Logger.log('Closing database connection...');
             await globalThis.DB_INSTANCE.close();
-
-            Logger.log('Sellers loaded!');
-            console.log(globalThis.SELLERS);
         }
         catch (err) {
             console.log(err);
         }
+        return true;
     }
 
 }

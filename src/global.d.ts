@@ -6,5 +6,6 @@ export { };
 declare global {
     var CLIENT: Client;
     var DB_INSTANCE: MongoClient;
+    var SELLER_REPOSITORY: SellerRepository;
     var SELLERS: SellerProfile[];
 }

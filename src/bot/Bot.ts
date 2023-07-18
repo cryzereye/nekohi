@@ -31,10 +31,10 @@ export default class Bot {
         globalThis.SELLERS = [];
 
         new SellerRepository();
-
-        await new Promise(resolve => setTimeout(resolve, 20000));
-        new KurasuKyotoService(globalThis.SELLERS[0]);
-        new GoodCupService(globalThis.SELLERS[1]);
+        if (await globalThis.SELLER_REPOSITORY.load()) {
+            new KurasuKyotoService(globalThis.SELLERS[0]);
+            new GoodCupService(globalThis.SELLERS[1]);
+        }
     }
 
 }
